@@ -1,27 +1,35 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+	<div class="container">
+		<component :is="'Home'" />
+	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import { defineComponent } from 'vue';
+import Home from './pages/Home.vue';
+import store from '@/store';
 
 export default defineComponent({
-  name: "App",
-  components: {
-    HelloWorld,
-  },
+	components: { Home },
+	created() {
+		store.dispatch('fetchFaqCategories');
+	}
 });
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+body {
+	height: 100vh;
+}
+
+.container {
+	height: 100vh;
+
+	display: grid;
+	grid-template-columns: 305px;
+	grid-template-rows: 30rem;
+
+	justify-content: center;
+	align-content: center;
 }
 </style>
