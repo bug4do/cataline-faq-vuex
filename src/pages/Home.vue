@@ -12,8 +12,9 @@
 				class="category-item"
 				v-for="category in $allCategories"
 				:key="category.id"
+				@click="goToCategory(category)"
 			>
-				<img :src="require(`@/assets/images/${category.icon}`)" />
+				<img :src="getIconImage(category)" />
 				<p>{{ category.title }}</p>
 			</li>
 		</ul>
@@ -21,10 +22,10 @@
 </template>
 
 <script lang="ts">
-import FAQCategory from '@/interfaces/FAQCategory';
+import FAQCategory from '@/interfaces/Category';
 import store from '@/store';
 import { defineComponent } from 'vue';
-import Astronaut from '../components/Astronaut.vue';
+import Astronaut from '@/components/Astronaut.vue';
 
 export default defineComponent({
 	components: { Astronaut },
@@ -32,16 +33,22 @@ export default defineComponent({
 		$allCategories(): FAQCategory[] {
 			return store.getters.$all;
 		}
+	},
+	methods: {
+		getIconImage(category: FAQCategory) {
+			return require(`@/assets/images/${category.icon}`);
+		},
+		goToCategory(category: FAQCategory) {
+			store.dispatch('setCurrentCategory', category);
+			store.dispatch('increaseTransitionDepth');
+			store.dispatch('setCurrentView', 'CategoryInfo');
+		}
 	}
 });
 </script>
 
 <style scoped>
 .home {
-	border-radius: 15px;
-	background: linear-gradient(180deg, #3f4452, #26282c);
-	box-shadow: 0 8px 21px 3px rgb(0 0 0 / 19%);
-
 	display: grid;
 	justify-items: center;
 	width: 100%;
@@ -70,7 +77,6 @@ export default defineComponent({
 .faq-title {
 	font-size: 20px;
 	font-weight: bold;
-	color: #f5f6f8;
 	justify-self: start;
 }
 
@@ -78,20 +84,21 @@ export default defineComponent({
 	margin-top: 0.5rem;
 	font-size: 13px;
 	font-weight: normal;
-	color: #f5f6f8;
 	justify-self: start;
 }
 
 .categories {
 	list-style: none;
 
+	display: grid;
+	align-items: center;
 }
 
 .category-item {
 	width: 100%;
 	display: grid;
 	padding: 1rem 1.6rem;
-	grid-gap: 2rem;
+	grid-gap: 2.125rem;
 	grid-template-columns: auto 1fr;
 	align-items: center;
 	grid-auto-flow: column;
@@ -100,8 +107,6 @@ export default defineComponent({
 
 	border-radius: 10px;
 	cursor: pointer;
-
-	color: #f5f6f8;
 }
 
 .category-item:hover {
@@ -113,7 +118,6 @@ export default defineComponent({
 }
 
 .category-item img {
-	width: 25px;
-	height: 25px;
+	width: 1.5rem;
 }
 </style>
